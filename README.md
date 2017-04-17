@@ -1,2 +1,2 @@
 # cmcAPI
-Coin Market Cap API  package- written in Go
+Coin Market Cap API package- written in Go
