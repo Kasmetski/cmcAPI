@@ -8,21 +8,27 @@ import (
 )
 
 func main() {
+	//Get global market data
 	getMarket, err := cmcAPI.GetMarketData()
 	if err != nil {
 		log.Fatal(err)
+	} else {
+		fmt.Println(getMarket)
 	}
-	fmt.Println(getMarket)
+	//Get info about one coin
 	getBTC, err := cmcAPI.GetCoinInfo("bitcoin")
 	if err != nil {
 		log.Fatal(err)
-	}
-	fmt.Println(getBTC)
+	} else {
+		fmt.Println(getBTC)
 
-	getCoins, err := cmcAPI.GetAllCoinInfo()
+	}
+	//GetAllCoinInfo(0) for all coins, GetAllCoinInfo(10) for top 10 coins & etc.
+	getCoins, err := cmcAPI.GetAllCoinInfo(10)
 	if err != nil {
 		log.Fatal(err)
+	} else {
+		fmt.Println(getCoins)
 	}
-	fmt.Println(getCoins[1])
 
 }

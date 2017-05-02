@@ -7,8 +7,8 @@ import (
 	"net/http"
 )
 
-//DoRequest -
-func DoRequest(req *http.Request) ([]byte, error) {
+//doReq -
+func doReq(req *http.Request) ([]byte, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -22,5 +22,20 @@ func DoRequest(req *http.Request) ([]byte, error) {
 	if 200 != resp.StatusCode {
 		return nil, fmt.Errorf("%s", body)
 	}
+
 	return body, nil
+}
+
+//MakeReq - request and response
+func MakeReq(url string) ([]byte, error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	resp, err := doReq(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return resp, err
 }

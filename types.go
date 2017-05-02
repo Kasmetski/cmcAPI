@@ -1,6 +1,6 @@
 package cmcAPI
 
-//Coin -
+//Coin struct
 type Coin []struct {
 	ID               string `json:"id"`
 	Name             string `json:"name"`
@@ -18,7 +18,7 @@ type Coin []struct {
 	LastUpdated      string `json:"last_updated"`
 }
 
-//GlobalMarketData -
+//GlobalMarketData struct
 type GlobalMarketData struct {
 	TotalMarketCapUsd float64 `json:"total_market_cap_usd"`
 	Total24HVolumeUsd float64 `json:"total_24h_volume_usd"`
