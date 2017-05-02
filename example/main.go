@@ -11,14 +11,14 @@ func main() {
 	//Get global market data
 	getMarket, err := cmcAPI.GetMarketData()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	} else {
 		fmt.Println(getMarket)
 	}
 	//Get info about one coin
 	getBTC, err := cmcAPI.GetCoinInfo("bitcoin")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	} else {
 		fmt.Println(getBTC)
 
@@ -26,7 +26,7 @@ func main() {
 	//GetAllCoinInfo(0) for all coins, GetAllCoinInfo(10) for top 10 coins & etc.
 	getCoins, err := cmcAPI.GetAllCoinInfo(10)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	} else {
 		fmt.Println(getCoins)
 	}
