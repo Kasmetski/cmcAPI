@@ -3,7 +3,9 @@ package cmcAPI
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 )
 
 var (
@@ -16,7 +18,7 @@ var (
 func GetMarketData() (GlobalMarketData, error) {
 	url = fmt.Sprintf(baseURL + "/global/")
 
-	resp, err := MakeReq(url)
+	resp, err := makeReq(url)
 
 	var data GlobalMarketData
 	err = json.Unmarshal(resp, &data)
@@ -30,9 +32,27 @@ func GetMarketData() (GlobalMarketData, error) {
 //GetCoinInfo - Get information about single crypto currency
 func GetCoinInfo(coin string) (Coin, error) {
 	url = fmt.Sprintf("%s/ticker/%s", baseURL, coin)
-	resp, err := MakeReq(url)
+	resp, err := makeReq(url)
 
-	var data Coin
+	var data []Coin
+	err = json.Unmarshal(resp, &data)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return data[0], nil
+}
+
+//GetAllCoinInfo - Get information about all coins listed in Coin Market Cap. If you want to limit the search to top 10 coins pass 10 as int, if you want all - pass 0 == No Limit
+func GetAllCoinInfo(limit int) ([]Coin, error) {
+	if limit > 0 {
+		l = fmt.Sprintf("?limit=%v", limit)
+	}
+	url = fmt.Sprintf("%s/ticker/%s", baseURL, l)
+
+	resp, err := makeReq(url)
+
+	var data []Coin
 	err = json.Unmarshal(resp, &data)
 	if err != nil {
 		log.Fatal(err)
@@ -41,20 +61,34 @@ func GetCoinInfo(coin string) (Coin, error) {
 	return data, nil
 }
 
-//GetAllCoinInfo - Get information about all coins listed in Coin Market Cap. If you want to limit the search to top 10 coins pass 10 as int, if you want all - pass 0 == No Limit
-func GetAllCoinInfo(limit int) (Coin, error) {
-	if limit > 0 {
-		l = fmt.Sprintf("?limit=%v", limit)
+//Client
+func doReq(req *http.Request) ([]byte, error) {
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
 	}
-	url = fmt.Sprintf("%s/ticker/%s", baseURL, l)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if 200 != resp.StatusCode {
+		return nil, fmt.Errorf("%s", body)
+	}
 
-	resp, err := MakeReq(url)
+	return body, nil
+}
 
-	var data Coin
-	err = json.Unmarshal(resp, &data)
+func makeReq(url string) ([]byte, error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	resp, err := doReq(req)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return data, nil
+	return resp, err
 }
