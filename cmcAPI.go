@@ -11,7 +11,6 @@ import (
 var (
 	baseURL = "https://api.coinmarketcap.com/v1"
 	url     string
-	l       string
 )
 
 //GetMarketData - Get information about the global market data of the cryptocurrencies
@@ -44,7 +43,8 @@ func GetCoinInfo(coin string) (Coin, error) {
 }
 
 //GetAllCoinInfo - Get information about all coins listed in Coin Market Cap. If you want to limit the search to top 10 coins pass 10 as int, if you want all - pass 0 == No Limit
-func GetAllCoinInfo(limit int) ([]Coin, error) {
+func GetAllCoinInfo(limit int) (map[string]Coin, error) {
+	var l string
 	if limit > 0 {
 		l = fmt.Sprintf("?limit=%v", limit)
 	}
@@ -57,8 +57,13 @@ func GetAllCoinInfo(limit int) ([]Coin, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	//creating map from the array
+	allCoins := make(map[string]Coin)
+	for i := 0; i < len(data); i++ {
+		allCoins[data[i].ID] = data[i]
+	}
 
-	return data, nil
+	return allCoins, nil
 }
 
 //Client

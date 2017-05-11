@@ -15,7 +15,7 @@ func main() {
 	} else {
 		fmt.Println(getMarket)
 	}
-	//Get info about one coin
+	//Get info about one asset
 	getBTC, err := cmcAPI.GetCoinInfo("bitcoin")
 	if err != nil {
 		log.Println(err)
@@ -24,11 +24,11 @@ func main() {
 
 	}
 	//GetAllCoinInfo(0) for all coins, GetAllCoinInfo(10) for top 10 coins & etc.
-	getCoins, err := cmcAPI.GetAllCoinInfo(10)
+	getCoins, err := cmcAPI.GetAllCoinInfo(0)
 	if err != nil {
 		log.Println(err)
 	} else {
-		fmt.Println(getCoins)
+		fmt.Println(getCoins["ethereum"])
 	}
 
 }
