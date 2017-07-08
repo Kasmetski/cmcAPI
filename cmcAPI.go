@@ -22,7 +22,7 @@ func GetMarketData() (GlobalMarketData, error) {
 	var data GlobalMarketData
 	err = json.Unmarshal(resp, &data)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	return data, nil
@@ -32,11 +32,15 @@ func GetMarketData() (GlobalMarketData, error) {
 func GetCoinInfo(coin string) (Coin, error) {
 	url = fmt.Sprintf("%s/ticker/%s", baseURL, coin)
 	resp, err := makeReq(url)
-
+	if err != nil {
+		log.Println(err)
+		return Coin{}, err
+	}
 	var data []Coin
 	err = json.Unmarshal(resp, &data)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return Coin{}, err
 	}
 
 	return data[0], nil
@@ -55,7 +59,7 @@ func GetAllCoinInfo(limit int) (map[string]Coin, error) {
 	var data []Coin
 	err = json.Unmarshal(resp, &data)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	//creating map from the array
 	allCoins := make(map[string]Coin)
@@ -71,12 +75,12 @@ func doReq(req *http.Request) ([]byte, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	if 200 != resp.StatusCode {
 		return nil, fmt.Errorf("%s", body)
@@ -88,11 +92,11 @@ func doReq(req *http.Request) ([]byte, error) {
 func makeReq(url string) ([]byte, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	resp, err := doReq(req)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	return resp, err
