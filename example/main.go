@@ -13,7 +13,7 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	} else {
-		fmt.Println(getMarket)
+		fmt.Println(getMarket.ActiveMarkets)
 	}
 	//Get info about one asset
 	getBTC, err := cmcAPI.GetCoinInfo("bitcoin")
@@ -30,5 +30,4 @@ func main() {
 	} else {
 		fmt.Println(getCoins["ethereum"])
 	}
-
 }
